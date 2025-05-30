@@ -1,0 +1,17 @@
+Analysis & Synthesis Status : Successful - Mon Jun 10 20:38:52 2024
+Quartus Prime Version : 18.1.0 Build 625 09/12/2018 SJ Lite Edition
+Revision Name : Bulls_and_Cows_2019265006_2019265093
+Top-level Entity Name : Bulls_and_Cows_2019265006_2019265093
+Family : Cyclone V
+Logic utilization (in ALMs) : N/A
+Total registers : 173
+Total pins : 35
+Total virtual pins : 0
+Total block memory bits : 0
+Total DSP Blocks : 0
+Total HSSI RX PCSs : 0
+Total HSSI PMA RX Deserializers : 0
+Total HSSI TX PCSs : 0
+Total HSSI PMA TX Serializers : 0
+Total PLLs : 0
+Total DLLs : 0

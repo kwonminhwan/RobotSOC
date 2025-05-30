@@ -1,0 +1,102 @@
+library ieee;
+use ieee.std_logic_1164.all;
+
+entity Bulls_and_Cows_2019265006_2019265093 is
+    port (
+        clk : in std_logic;
+        reset : in std_logic;
+        user_input : in std_logic_vector(13 downto 0); -- UART를 통해 입력된 사용자 입력
+        display_strike : out std_logic_vector(6 downto 0);
+        display_ball : out std_logic_vector(6 downto 0);
+        leds : out std_logic_vector(8 downto 0)
+    );
+end Bulls_and_Cows_2019265006_2019265093;
+
+architecture behavioral of Bulls_and_Cows_2019265006_2019265093 is
+    signal random_num : std_logic_vector(13 downto 0);
+    signal strikes, balls : integer;
+    signal attempt_count : integer := 0;
+
+    component lfsr is
+        port (
+            clk : in std_logic;
+            reset : in std_logic;
+            random_num : out std_logic_vector(13 downto 0)
+        );
+    end component;
+
+    component compare_numbers is
+        port (
+            user_input : in std_logic_vector(13 downto 0);
+            random_num : in std_logic_vector(13 downto 0);
+            strikes : out integer;
+            balls : out integer
+        );
+    end component;
+
+    component seven_segment_display is
+        port (
+            strikes : in integer;
+            balls : in integer;
+            display_strike : out std_logic_vector(6 downto 0);
+            display_ball : out std_logic_vector(6 downto 0)
+        );
+    end component;
+
+    component chance_led is
+        port (
+            clk : in std_logic;
+            reset : in std_logic;
+            attempt_count : in integer;
+            leds : out std_logic_vector(8 downto 0)
+        );
+    end component;
+
+begin
+    -- LFSR instance
+    lfsr_inst : lfsr
+        port map (
+            clk => clk,
+            reset => reset,
+            random_num => random_num
+        );
+
+    -- Compare numbers instance
+    compare_inst : compare_numbers
+        port map (
+            user_input => user_input,
+            random_num => random_num,
+            strikes => strikes,
+            balls => balls
+        );
+
+    -- 7-segment display instance
+    display_inst : seven_segment_display
+        port map (
+            strikes => strikes,
+            balls => balls,
+            display_strike => display_strike,
+            display_ball => display_ball
+        );
+
+    -- Chance LED instance
+    led_inst : chance_led
+        port map (
+            clk => clk,
+            reset => reset,
+            attempt_count => attempt_count,
+            leds => leds
+        );
+
+    -- Attempt count management
+    process(clk, reset)
+    begin
+        if reset = '1' then
+            attempt_count <= 0;
+        elsif rising_edge(clk) then
+            if user_input'event then
+                attempt_count <= attempt_count + 1;
+            end if;
+        end if;
+    end process;
+end behavioral;
